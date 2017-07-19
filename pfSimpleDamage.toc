@@ -1,0 +1,10 @@
+## Interface: 11200
+## Title: |cff33ffccpf|cffffffffUI [simpleDamge]
+## Author: Shagu
+## Notes: A lightweight DamageMeter
+## Version: 2.2
+## Dependencies: pfUI
+## SavedVariablesPerCharacter: pfDamageTable
+
+# main
+pfSimpleDamage.lua
