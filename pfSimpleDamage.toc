@@ -1,5 +1,5 @@
 ## Interface: 11200
-## Title: |cff33ffccpf|cffffffffUI [simpleDamge]
+## Title: |cff33ffccpf|cffffffffSimpleDamage
 ## Author: Shagu
 ## Notes: A lightweight DamageMeter
 ## Version: 2.2
