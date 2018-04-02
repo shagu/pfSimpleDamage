@@ -2,7 +2,7 @@
 
 Addon and pfUI-module that was an experiment for locale-independent damage parsing. Don't expect to see anything fancy here.
 
-![preview](https://i.imgur.com/pqjaagB.png)
+![tooltip](https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfSimpleDamage/tooltip.jpg)
 
 ## Installation
 1. Download **[Latest Version](https://github.com/shagu/pfSimpleDamage/archive/master.zip)**
