@@ -9,7 +9,7 @@ pfUI:RegisterModule("damagemeter", function ()
   local CreateBackdrop = pfUI.api.CreateBackdrop
   local round = pfUI.api.round
   local UpdateMovable = pfUI.api.UpdateMovable
-  
+
   local playerClasses = {}
 
   local validUnits = {}
@@ -169,9 +169,9 @@ pfUI:RegisterModule("damagemeter", function ()
         end
       end
     end
-    
+
     show_all_units = nil
-    
+
     if show_all_units then
       playerClasses[name] = "other"
       return true
@@ -484,5 +484,3 @@ pfUI:RegisterModule("damagemeter", function ()
     end
   end)
 end)
-
-pfUI.module["damagemeter"]()
