@@ -1,11 +1,12 @@
 pfUI:RegisterModule("damagemeter", function ()
-  local gsub = gsub
-  local dmg_table = {}
-  local view_dmg_all = {}
-  local dmg_report = {}
-  local view_dmg_all_max = 0
+  local track_all_units = false
   local width = 200
   local height = 18
+
+  local dmg_table = {}
+  local view_dmg_all = {}
+  local view_dmg_all_max = 0
+
   local CreateBackdrop = pfUI.api.CreateBackdrop
   local round = pfUI.api.round
   local UpdateMovable = pfUI.api.UpdateMovable
@@ -23,26 +24,26 @@ pfUI:RegisterModule("damagemeter", function ()
 
   -- TODO: api
   function spairs(t, order)
-      -- collect the keys
-      local keys = {}
-      for k in pairs(t) do keys[table.getn(keys)+1] = k end
+    -- collect the keys
+    local keys = {}
+    for k in pairs(t) do keys[table.getn(keys)+1] = k end
 
-      -- if order function given, sort by it by passing the table and keys a, b,
-      -- otherwise just sort the keys
-      if order then
-          table.sort(keys, function(a,b) return order(t, a, b) end)
-      else
-          table.sort(keys)
-      end
+    -- if order function given, sort by it by passing the table and keys a, b,
+    -- otherwise just sort the keys
+    if order then
+      table.sort(keys, function(a,b) return order(t, a, b) end)
+    else
+      table.sort(keys)
+    end
 
-      -- return the iterator function
-      local i = 0
-      return function()
-          i = i + 1
-          if keys[i] then
-              return keys[i], t[keys[i]]
-          end
+    -- return the iterator function
+    local i = 0
+    return function()
+      i = i + 1
+      if keys[i] then
+        return keys[i], t[keys[i]]
       end
+    end
   end
 
   local function prepare(template)
@@ -94,7 +95,6 @@ pfUI:RegisterModule("damagemeter", function ()
   local pfCOMBATHITCRITSCHOOLOTHEROTHER = prepare(COMBATHITCRITSCHOOLOTHEROTHER) -- %s crits %s for %d %s damage.
 
   pfUI.damagemeter = CreateFrame("Frame", "pfDamageMeter", UIParent)
-
   pfUI.damagemeter:SetPoint("CENTER", 0,0)
   pfUI.damagemeter:SetWidth(width)
   pfUI.damagemeter:SetHeight(0)
@@ -133,11 +133,20 @@ pfUI:RegisterModule("damagemeter", function ()
     pfUI.damagemeter.bar[i]:EnableMouse(true)
 
     pfUI.damagemeter.bar[i]:SetScript("OnMouseDown",function()
-      this:GetParent():StartMoving()
+      if arg1 == "LeftButton" then
+        this:GetParent():StartMoving()
+      elseif arg1 == "RightButton" then
+        pfUI.damagemeter:ResetBars(this.textLeft:GetText())
+      elseif arg1 == "MiddleButton" then
+        pfUI.damagemeter:ResetBars()
+      end
     end)
 
     pfUI.damagemeter.bar[i]:SetScript("OnMouseUp",function()
-      this:GetParent():StopMovingOrSizing()
+      if arg1 == "LeftButton" then
+        this:GetParent():StopMovingOrSizing()
+        SaveMovable(this:GetParent())
+      end
     end)
 
     pfUI.damagemeter.bar[i]:SetScript("OnEnter", function()
@@ -170,13 +179,29 @@ pfUI:RegisterModule("damagemeter", function ()
       end
     end
 
-    show_all_units = nil
-
-    if show_all_units then
+    if track_all_units then
       playerClasses[name] = "other"
       return true
     else
       return false
+    end
+  end
+
+  function pfUI.damagemeter:ResetBars(name)
+    if name then
+      if dmg_table[name] and view_dmg_all[name] then
+        dmg_table[name] = nil
+        view_dmg_all[name] = nil
+        view_dmg_all_max = 0
+        pfUI.damagemeter:RefreshBars()
+      else
+        message("No entries found for: " .. name)
+      end
+    else
+      dmg_table = {}
+      view_dmg_all = {}
+      view_dmg_all_max = 0
+      pfUI.damagemeter:RefreshBars()
     end
   end
 
@@ -186,8 +211,11 @@ pfUI:RegisterModule("damagemeter", function ()
     for _, damage in pairs(view_dmg_all) do
       count = count + 1
       sum_dmg = sum_dmg + damage
-    end
 
+      if damage > view_dmg_all_max then
+        view_dmg_all_max = damage
+      end
+    end
 
     local i=0
     for name, damage in spairs(view_dmg_all, function(t,a,b) return t[b] < t[a] end) do
@@ -215,26 +243,30 @@ pfUI:RegisterModule("damagemeter", function ()
 
       pfUI.damagemeter.bar[i]:SetStatusBarColor(color.r, color.g, color.b)
 
-
       pfUI.damagemeter.bar[i].textLeft:SetText(name)
-
       pfUI.damagemeter.bar[i].textRight:SetText(damage .. " - " .. round(damage / sum_dmg * 100,1) .. "%")
       i = i + 1
     end
 
-    pfUI.damagemeter:SetHeight(i * height)
+    local sizing = i * height
+    if sizing > 0 then
+      pfUI.damagemeter:SetHeight(sizing)
+      pfUI.damagemeter:Show()
+    else
+      pfUI.damagemeter:SetHeight(height)
+      pfUI.damagemeter:Hide()
+    end
 
     -- hide remaining bars
     for j=i,50 do
       pfUI.damagemeter.bar[j]:Hide()
     end
-
   end
 
   function pfUI.damagemeter:AddData(source, attack, target, damage, school)
     -- message(source .. " (" .. attack .. ") -> " .. target .. ": " .. damage .. " (" .. school .. ")")
 
-      -- write dmg_table table
+    -- write dmg_table table
     if not dmg_table[source] and pfUI.damagemeter:ScanName(source) then
       dmg_table[source] = {}
     end
@@ -246,12 +278,8 @@ pfUI:RegisterModule("damagemeter", function ()
       return
     end
 
-    -- write view_dmg_all
     if dmg_table[source] then
       view_dmg_all[source] = (view_dmg_all[source] or 0) + tonumber(damage)
-      if view_dmg_all[source] > view_dmg_all_max then
-        view_dmg_all_max = view_dmg_all[source]
-      end
     end
 
     pfUI.damagemeter:RefreshBars()
