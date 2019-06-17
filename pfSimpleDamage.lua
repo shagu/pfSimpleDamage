@@ -95,7 +95,7 @@ pfUI:RegisterModule("damagemeter", function ()
   local pfCOMBATHITCRITSCHOOLOTHEROTHER = prepare(COMBATHITCRITSCHOOLOTHEROTHER) -- %s crits %s for %d %s damage.
 
   pfUI.damagemeter = CreateFrame("Frame", "pfDamageMeter", UIParent)
-  pfUI.damagemeter:SetPoint("CENTER", 0,0)
+  pfUI.damagemeter:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
   pfUI.damagemeter:SetWidth(width)
   pfUI.damagemeter:SetHeight(0)
   pfUI.damagemeter:SetMovable(true)
