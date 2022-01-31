@@ -1,6 +1,7 @@
 # pfSimpleDamage
 
-Addon and pfUI-module that was an experiment for locale-independent damage parsing. Don't expect to see anything fancy here.
+An incomplete Addon and pfUI-module that was nothing more than an experiment and prototype for locale-independent damage parsing.
+Don't expect to see anything fancy here.
 
 ![tooltip](https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfSimpleDamage/tooltip.png)
 
