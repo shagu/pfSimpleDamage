@@ -106,12 +106,11 @@ pfUI:RegisterModule("damagemeter", function ()
   pfUI.damagemeter.bar = {}
   for i=0,50 do
     pfUI.damagemeter.bar[i] = CreateFrame("StatusBar", "pfDamageMeterBar" .. i, pfUI.damagemeter)
-    pfUI.damagemeter.bar[i]:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
     pfUI.damagemeter.bar[i]:SetStatusBarTexture("Interface\\Tooltips\\UI-Tooltip-Background")
     pfUI.damagemeter.bar[i]:SetWidth(width)
     pfUI.damagemeter.bar[i]:SetHeight(height)
     pfUI.damagemeter.bar[i]:Hide()
-    pfUI.damagemeter.bar[i]:SetPoint("TOP",pfUI.damagemeter,"TOP", 0, -pfUI.damagemeter.bar[i]:GetHeight()*i)
+    pfUI.damagemeter.bar[i]:SetPoint("TOP", pfUI.damagemeter, "TOP", 0, -pfUI.damagemeter.bar[i]:GetHeight()*i)
 
     pfUI.damagemeter.bar[i].textLeft = pfUI.damagemeter.bar[i]:CreateFontString("Status", "OVERLAY", "GameFontNormal")
     pfUI.damagemeter.bar[i].textLeft:SetFont(STANDARD_TEXT_FONT, 12, "OUTLINE")
