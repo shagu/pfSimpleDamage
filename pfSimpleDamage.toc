@@ -3,8 +3,11 @@
 ## Author: Shagu
 ## Notes: A lightweight DamageMeter
 ## Version: 2.2
-## Dependencies: pfUI
+## OptionalDeps: pfUI, pfQuest
 ## SavedVariablesPerCharacter: pfDamageTable
+
+# api
+compat.lua
 
 # main
 pfSimpleDamage.lua

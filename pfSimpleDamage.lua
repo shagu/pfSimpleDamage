@@ -10,6 +10,7 @@ pfUI:RegisterModule("damagemeter", function ()
   local CreateBackdrop = pfUI.api.CreateBackdrop
   local round = pfUI.api.round
   local UpdateMovable = pfUI.api.UpdateMovable
+  local SaveMovable = pfUI.api.SaveMovable
 
   local playerClasses = {}
 
@@ -100,7 +101,8 @@ pfUI:RegisterModule("damagemeter", function ()
   pfUI.damagemeter:SetHeight(0)
   pfUI.damagemeter:SetMovable(true)
 
-  CreateBackdrop(pfUI.damagemeter)
+  local inset = pfUI.backdrop.insets.left * 2 + 2
+  CreateBackdrop(pfUI.damagemeter, inset)
   UpdateMovable(pfUI.damagemeter)
 
   pfUI.damagemeter.bar = {}
